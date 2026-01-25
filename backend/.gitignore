@@ -1,0 +1,9 @@
+venv/
+ml_training/fer2013/
+processed_data/
+# saved_models/*.h5
+# *.h5
+*.npy
+__pycache__/
+*.pyc
+.DS_Store
