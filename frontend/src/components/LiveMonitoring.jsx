@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { Camera, CameraOff, AlertTriangle, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useTheme } from '../context/ThemeContext';
 import api from '../utils/api';
 
 const LiveMonitoring = () => {
+  const { colors, isDark } = useTheme();
   const [isStreaming, setIsStreaming] = useState(false);
   const [currentData, setCurrentData] = useState(null);
   const [historyData, setHistoryData] = useState([]);
@@ -111,258 +113,283 @@ const LiveMonitoring = () => {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '1600px', margin: '0 auto' }}>
+    <div style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto' }}>
       {/* Header */}
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2rem', fontWeight: '700', color: 'white', marginBottom: '0.5rem' }}>
+      <div style={{ marginBottom: '2.5rem' }}>
+        <h1 style={{ fontSize: '2.5rem', fontWeight: '700', color: colors.textPrimary, marginBottom: '0.5rem' }}>
           Live Monitoring
         </h1>
-        <p style={{ color: 'rgba(255,255,255,0.8)' }}>
-          Real-time worker fatigue and stress detection
+        <p style={{ color: colors.textSecondary, fontSize: '1rem' }}>
+          Real-time worker fatigue and stress detection system
         </p>
       </div>
 
-      {/* Main Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-        {/* Camera Feed */}
-        <div className="card" style={{ position: 'relative', height: '420px' }}>
-          <div style={{ display: 'flex', justifyContent: 'between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h3 style={{ fontSize: '1.125rem', fontWeight: '600' }}>Camera Feed</h3>
-            <button
-              onClick={isStreaming ? stopCamera : startCamera}
-              className={isStreaming ? 'btn-secondary' : 'btn-primary'}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}
-            >
-              {isStreaming ? <CameraOff size={18} /> : <Camera size={18} />}
-              {isStreaming ? 'Stop' : 'Start Camera'}
-            </button>
+      {/* Main Layout: Face Scan + Metrics in One Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
+        {/* Left: Circular Facial Scan - No outer box */}
+        <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '400px' }}>
+          {/* Square Container with Curved Edges */}
+          <div style={{
+  position: 'relative',
+  width: '320px',
+  height: '320px',
+  borderRadius: '16px',
+  overflow: 'hidden',
+  border: `2px solid ${colors.accent}`,
+  background: isDark ? '#000' : '#e2e8f0'
+}}>
+  <video
+    ref={videoRef}
+    autoPlay
+    playsInline
+    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+  />
+  <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+  {/* Rotating dashed face scan ring */}
+  {isStreaming && <div className="face-scan-ring" />}
+
+  {!isStreaming && (
+    <div style={{
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      textAlign: 'center',
+      color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)'
+    }}>
+      <Camera size={48} style={{ marginBottom: '1rem' }} />
+      <p style={{ fontSize: '0.85rem' }}>Click to start</p>
+    </div>
+  
+
+            )}
+
+            
           </div>
 
-          <div style={{ 
-            position: 'relative', 
-            width: '100%', 
-            height: 'calc(100% - 60px)',
-            background: '#000',
-            borderRadius: '8px',
-            overflow: 'hidden'
-          }}>
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-            <canvas ref={canvasRef} style={{ display: 'none' }} />
-            
-            {!isStreaming && (
-              <div style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                textAlign: 'center',
-                color: 'white'
-              }}>
-                <Camera size={48} style={{ opacity: 0.3, marginBottom: '1rem' }} />
-                <p style={{ opacity: 0.6 }}>Click "Start Camera" to begin</p>
-              </div>
-            )}
-          </div>
+          
+
+          {/* Camera Control Button */}
+          <button
+            onClick={isStreaming ? stopCamera : startCamera}
+            className={isStreaming ? 'btn-secondary' : 'btn-primary'}
+            style={{ marginTop: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.5rem', fontSize: '0.9rem' }}
+          >
+            {isStreaming ? <CameraOff size={18} /> : <Camera size={18} />}
+            {isStreaming ? 'Stop Camera' : 'Start Camera'}
+          </button>
 
           {error && (
             <div style={{
-              position: 'absolute',
-              bottom: '1rem',
-              left: '1rem',
-              right: '1rem',
-              background: 'rgba(239, 68, 68, 0.9)',
-              color: 'white',
+              marginTop: '1rem',
               padding: '0.75rem',
-              borderRadius: '6px',
-              fontSize: '0.875rem'
+              background: isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.2)',
+              border: '1px solid #ef4444',
+              borderRadius: '8px',
+              color: '#ef4444',
+              fontSize: '0.85rem',
+              textAlign: 'center',
+              maxWidth: '320px'
             }}>
               {error}
             </div>
           )}
         </div>
 
-        {/* Live Metrics */}
-        <div className="card" style={{ height: '420px' }}>
-          <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1.5rem' }}>
-            Current Status
-          </h3>
-
-          {currentData ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              {/* Risk Score */}
+        {/* Right: Live Metrics */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: 'fit-content' }}>
+          {/* Overall Risk Score */}
+          <div style={{ 
+            background: colors.cardBackground,
+            border: `1px solid ${colors.border}`,
+            borderRadius: '12px',
+            padding: '1rem',
+            height: '120px',
+            overflow: 'hidden'
+          }}>
+            <p style={{ fontSize: '0.75rem', color: colors.textSecondary, marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              Overall Risk Score
+            </p>
+            {currentData ? (
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>Overall Risk Score</span>
-                  <span style={{ 
-                    fontSize: '1.5rem', 
-                    fontWeight: '700',
-                    color: getRiskColor(currentData.risk_assessment.risk_level)
-                  }}>
-                    {currentData.risk_assessment.risk_score}
-                  </span>
+                <div style={{ 
+                  fontSize: '1.5rem', 
+                  fontWeight: '700',
+                  color: getRiskColor(currentData.risk_assessment.risk_level),
+                  marginBottom: '0.5rem'
+                }}>
+                  {currentData.risk_assessment.risk_score}%
                 </div>
                 <div style={{
-                  height: '8px',
-                  background: '#e2e8f0',
+                  height: '6px',
+                  background: isDark ? 'rgba(107, 92, 255, 0.2)' : 'rgba(107, 92, 255, 0.1)',
                   borderRadius: '4px',
-                  overflow: 'hidden'
+                  overflow: 'hidden',
+                  marginBottom: '0.5rem'
                 }}>
                   <div style={{
                     height: '100%',
                     width: `${currentData.risk_assessment.risk_score}%`,
                     background: getRiskColor(currentData.risk_assessment.risk_level),
-                    transition: 'width 0.5s ease'
+                    transition: 'width 0.5s ease',
+                    boxShadow: `0 0 10px ${getRiskColor(currentData.risk_assessment.risk_level)}`
                   }} />
                 </div>
-                <div style={{ 
-                  marginTop: '0.5rem',
+                <span style={{
                   display: 'inline-block',
-                  padding: '0.25rem 0.75rem',
-                  borderRadius: '12px',
-                  fontSize: '0.75rem',
+                  padding: '0.25rem 0.6rem',
+                  borderRadius: '20px',
+                  fontSize: '0.65rem',
                   fontWeight: '600',
                   textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
                   background: `${getRiskColor(currentData.risk_assessment.risk_level)}20`,
-                  color: getRiskColor(currentData.risk_assessment.risk_level)
+                  color: getRiskColor(currentData.risk_assessment.risk_level),
+                  border: `1px solid ${getRiskColor(currentData.risk_assessment.risk_level)}`
                 }}>
                   {currentData.risk_assessment.risk_level}
-                </div>
+                </span>
               </div>
+            ) : (
+              <p style={{ color: colors.textSecondary, fontSize: '0.9rem' }}>--</p>
+            )}
+          </div>
 
-              {/* Fatigue */}
+          {/* Stress Level */}
+          <div style={{ 
+            background: colors.cardBackground,
+            border: `1px solid ${colors.border}`,
+            borderRadius: '12px',
+            padding: '1rem',
+            height: '110px',
+            overflow: 'hidden'
+          }}>
+            <p style={{ fontSize: '0.75rem', color: colors.textSecondary, marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              Stress Level
+            </p>
+            {currentData ? (
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>Fatigue Level</span>
-                  <span style={{ fontSize: '1.125rem', fontWeight: '600', color: '#667eea' }}>
-                    {currentData.risk_assessment.fatigue_score.toFixed(1)}%
-                  </span>
-                </div>
-                <div style={{
-                  height: '6px',
-                  background: '#e2e8f0',
-                  borderRadius: '3px',
-                  overflow: 'hidden'
+                <div style={{ 
+                  fontSize: '1.5rem', 
+                  fontWeight: '700',
+                  color: '#7c3aed',
+                  marginBottom: '0.4rem'
                 }}>
-                  <div style={{
-                    height: '100%',
-                    width: `${currentData.risk_assessment.fatigue_score}%`,
-                    background: '#667eea',
-                    transition: 'width 0.5s ease'
-                  }} />
-                </div>
-              </div>
-
-              {/* Stress */}
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>Stress Level</span>
-                  <span style={{ fontSize: '1.125rem', fontWeight: '600', color: '#764ba2' }}>
-                    {currentData.risk_assessment.stress_score.toFixed(1)}%
-                  </span>
+                  {currentData.risk_assessment.stress_score.toFixed(1)}%
                 </div>
                 <div style={{
-                  height: '6px',
-                  background: '#e2e8f0',
+                  height: '5px',
+                  background: isDark ? 'rgba(107, 92, 255, 0.2)' : 'rgba(107, 92, 255, 0.1)',
                   borderRadius: '3px',
                   overflow: 'hidden'
                 }}>
                   <div style={{
                     height: '100%',
                     width: `${currentData.risk_assessment.stress_score}%`,
-                    background: '#764ba2',
-                    transition: 'width 0.5s ease'
+                    background: '#7c3aed',
+                    transition: 'width 0.5s ease',
+                    boxShadow: '0 0 8px rgba(124, 58, 237, 0.6)'
                   }} />
                 </div>
               </div>
+            ) : (
+              <p style={{ color: colors.textSecondary }}>--</p>
+            )}
+          </div>
 
-              {/* Trend & Session Info */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '1rem',
-                marginTop: '1rem',
-                paddingTop: '1rem',
-                borderTop: '1px solid var(--border-color)'
-              }}>
-                <div>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
-                    Trend
-                  </p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', fontWeight: '600' }}>
-                    {getTrendIcon(currentData.trend)}
-                    <span style={{ textTransform: 'capitalize' }}>{currentData.trend || 'Stable'}</span>
-                  </div>
+          {/* Fatigue Level */}
+          <div style={{ 
+            background: colors.cardBackground,
+            border: `1px solid ${colors.border}`,
+            borderRadius: '12px',
+            padding: '1rem',
+            height: '140px',
+            overflow: 'hidden'
+          }}>
+            <p style={{ fontSize: '0.75rem', color: colors.textSecondary, marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              Fatigue Level
+            </p>
+            {currentData ? (
+              <div>
+                <div style={{ 
+                  fontSize: '1.5rem', 
+                  fontWeight: '700',
+                  color: '#6b5cff',
+                  marginBottom: '0.75rem'
+                }}>
+                  {currentData.risk_assessment.fatigue_score.toFixed(1)}%
                 </div>
-                <div>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
-                    Session Duration
-                  </p>
-                  <p style={{ fontSize: '0.875rem', fontWeight: '600' }}>
-                    {currentData.session_info.duration_minutes.toFixed(0)} min
-                  </p>
+                <div style={{
+                  height: '6px',
+                  background: isDark ? 'rgba(107, 92, 255, 0.2)' : 'rgba(107, 92, 255, 0.1)',
+                  borderRadius: '3px',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{
+                    height: '100%',
+                    width: `${currentData.risk_assessment.fatigue_score}%`,
+                    background: '#6b5cff',
+                    transition: 'width 0.5s ease',
+                    boxShadow: '0 0 8px rgba(107, 92, 255, 0.6)'
+                  }} />
                 </div>
               </div>
-            </div>
-          ) : (
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              height: '300px',
-              color: 'var(--text-secondary)'
-            }}>
-              <p>Start camera to see live metrics</p>
-            </div>
-          )}
+            ) : (
+              <p style={{ color: '#a0aec0' }}>--</p>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Trend Chart */}
-      <div className="card">
-        <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1.5rem' }}>
+      {/* Bottom: Real-Time Chart Spanning Full Width */}
+      <div style={{ 
+        background: colors.cardBackground,
+        border: `1px solid ${colors.border}`,
+        borderRadius: '12px',
+        padding: '1.5rem'
+      }}>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1.5rem', color: colors.textPrimary }}>
           Real-Time Trends
         </h3>
         
         {historyData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={350}>
             <LineChart data={historyData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke={isDark ? 'rgba(107, 92, 255, 0.2)' : 'rgba(107, 92, 255, 0.1)'} />
               <XAxis 
                 dataKey="time" 
-                tick={{ fontSize: 12 }}
-                stroke="#64748b"
+                tick={{ fontSize: 12, fill: colors.textSecondary }}
+                stroke={isDark ? 'rgba(107, 92, 255, 0.2)' : 'rgba(107, 92, 255, 0.1)'}
               />
               <YAxis 
                 domain={[0, 100]}
-                tick={{ fontSize: 12 }}
-                stroke="#64748b"
+                tick={{ fontSize: 12, fill: colors.textSecondary }}
+                stroke={isDark ? 'rgba(107, 92, 255, 0.2)' : 'rgba(107, 92, 255, 0.1)'}
               />
               <Tooltip 
                 contentStyle={{
-                  background: 'white',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '6px'
+                  background: isDark ? 'rgba(26, 31, 58, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                  border: `1px solid ${colors.border}`,
+                  borderRadius: '8px',
+                  color: colors.textPrimary
                 }}
               />
-              <Legend />
+              <Legend wrapperStyle={{ paddingTop: '1rem' }} />
               <Line 
                 type="monotone" 
                 dataKey="fatigue" 
-                stroke="#667eea" 
-                strokeWidth={2}
+                stroke="#6b5cff" 
+                strokeWidth={2.5}
                 dot={false}
                 name="Fatigue %"
+                shadowBlur={10}
               />
               <Line 
                 type="monotone" 
                 dataKey="stress" 
-                stroke="#764ba2" 
-                strokeWidth={2}
+                stroke="#7c3aed" 
+                strokeWidth={2.5}
                 dot={false}
                 name="Stress %"
               />
@@ -370,7 +397,7 @@ const LiveMonitoring = () => {
                 type="monotone" 
                 dataKey="risk" 
                 stroke="#ef4444" 
-                strokeWidth={2}
+                strokeWidth={2.5}
                 dot={false}
                 name="Risk Score"
               />
@@ -382,7 +409,7 @@ const LiveMonitoring = () => {
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center',
-            color: 'var(--text-secondary)'
+            color: colors.textSecondary
           }}>
             <p>No data yet. Start camera to see trends.</p>
           </div>
