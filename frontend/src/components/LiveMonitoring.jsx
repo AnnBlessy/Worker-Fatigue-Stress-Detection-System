@@ -146,9 +146,6 @@ const LiveMonitoring = () => {
   />
   <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-  {/* Rotating dashed face scan ring */}
-  {isStreaming && <div className="face-scan-ring" />}
-
   {!isStreaming && (
     <div style={{
       position: 'absolute',
@@ -199,7 +196,7 @@ const LiveMonitoring = () => {
 
         {/* Right: Live Metrics */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: 'fit-content' }}>
-          {/* Overall Risk Score */}
+          {/* Overall Operational Strain Score */}
           <div style={{ 
             background: colors.cardBackground,
             border: `1px solid ${colors.border}`,
@@ -209,7 +206,7 @@ const LiveMonitoring = () => {
             overflow: 'hidden'
           }}>
             <p style={{ fontSize: '0.75rem', color: colors.textSecondary, marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              Overall Risk Score
+              Overall Operational Strain Score
             </p>
             {currentData ? (
               <div>

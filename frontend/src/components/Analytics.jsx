@@ -165,7 +165,7 @@ const Analytics = () => {
       }}>
         <StatCard icon={TrendingUp} label="Avg Fatigue Level" value={stats.avg_fatigue.toFixed(1)} suffix="%" color="#6b5cff" />
         <StatCard icon={AlertCircle} label="Avg Stress Level" value={stats.avg_stress.toFixed(1)} suffix="%" color="#ed3ae1" />
-        <StatCard icon={Activity} label="Avg Risk Score" value={stats.avg_risk.toFixed(1)} color="#ef4444" />
+        <StatCard icon={Activity} label="Avg Operational Strain Score" value={stats.avg_risk.toFixed(1)} color="#ef4444" />
         <StatCard icon={Clock} label="Total Samples" value={stats.total_samples} color="#10b981" />
       </div>
 
@@ -247,7 +247,7 @@ const Analytics = () => {
         </ResponsiveContainer>
       </div>
 
-      {/* RISK SUMMARY (UNCHANGED, YOUR CODE) */}
+      {/* OPERATIONAL STRAIN SUMMARY */}
       <div style={{
         background: colors.cardBackground,
         border: `1px solid ${colors.border}`,
@@ -256,22 +256,22 @@ const Analytics = () => {
         marginTop: '1.5rem'
       }}>
         <h3 style={{ marginBottom: '1.5rem', color: colors.textPrimary }}>
-          Risk Summary
+          Operational Strain Summary
         </h3>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
           <div style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid #10b981', borderRadius: '8px', padding: '1.5rem' }}>
-            <p style={{ color: '#059669' }}>Minimum Risk</p>
+            <p style={{ color: '#059669' }}>Minimum Strain</p>
             <p style={{ fontSize: '2rem', color: '#10b981' }}>{stats.min_risk.toFixed(1)}</p>
           </div>
 
           <div style={{ background: 'rgba(107,92,255,0.15)', border: '1px solid #6b5cff', borderRadius: '8px', padding: '1.5rem' }}>
-            <p style={{ color: '#4f46e5' }}>Average Risk</p>
+            <p style={{ color: '#4f46e5' }}>Average Strain</p>
             <p style={{ fontSize: '2rem', color: '#6b5cff' }}>{stats.avg_risk.toFixed(1)}</p>
           </div>
 
           <div style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid #ef4444', borderRadius: '8px', padding: '1.5rem' }}>
-            <p style={{ color: '#dc2626' }}>Maximum Risk</p>
+            <p style={{ color: '#dc2626' }}>Maximum Strain</p>
             <p style={{ fontSize: '2rem', color: '#ef4444' }}>{stats.max_risk.toFixed(1)}</p>
           </div>
         </div>
