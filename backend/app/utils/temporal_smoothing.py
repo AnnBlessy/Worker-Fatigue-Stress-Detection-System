@@ -77,3 +77,29 @@ class TemporalSmoother:
     def get_buffer_size(self) -> int:
         """Get current buffer size"""
         return len(self.fatigue_buffer)
+    
+    def update(self, stress_prob: float) -> Optional[float]:
+        """
+        Convenience method: add a single stress probability and return smoothed stress value.
+        
+        This is useful for streaming scenarios where you only track one metric.
+        Assumes fatigue, stress, normal probs sum to 1, so we estimate others as equal distribution of remainder.
+        
+        Args:
+            stress_prob: Stress probability value (0-1)
+        
+        Returns:
+            Smoothed stress probability or None if buffer is empty
+        """
+        # For a single stress value, estimate the other two as equal distribution of remainder
+        remainder = (1.0 - stress_prob) / 2.0
+        self.add_prediction({
+            'Fatigue': remainder,
+            'Stress': stress_prob,
+            'Normal': remainder
+        })
+        
+        smoothed = self.get_smoothed_probabilities()
+        if smoothed:
+            return smoothed['Stress']
+        return None

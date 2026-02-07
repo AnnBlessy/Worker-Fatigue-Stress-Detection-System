@@ -123,3 +123,48 @@ def prepare_fer2013_folders():
 
 if __name__ == "__main__":
     X_train, X_test, y_train, y_test = prepare_fer2013_folders()
+
+
+def load_data(split="test"):
+    """
+    Load processed data from `processed_data/`.
+
+    If processed files do not exist, this will invoke
+    `prepare_fer2013_folders()` to create them.
+
+    Args:
+        split (str): 'train' or 'test' (default 'test').
+
+    Returns:
+        tuple: (X, y) for the requested split. `y` is returned as
+               one-hot encoded array with shape (n_samples, 3).
+    """
+    data_dir = Path(__file__).parent / 'processed_data'
+
+    if not data_dir.exists():
+        print("Processed data not found — preparing dataset now...")
+        prepare_fer2013_folders()
+
+    X_train = np.load(data_dir / 'X_train.npy')
+    X_test = np.load(data_dir / 'X_test.npy')
+    y_train = np.load(data_dir / 'y_train.npy')
+    y_test = np.load(data_dir / 'y_test.npy')
+
+    # Ensure labels are one-hot encoded for downstream code that expects it
+    num_classes = 3
+    def _to_one_hot(y):
+        if y.ndim == 1 or (y.ndim == 2 and y.shape[1] == 1):
+            return np.eye(num_classes)[y.reshape(-1)]
+        return y
+
+    y_train = _to_one_hot(y_train)
+    y_test = _to_one_hot(y_test)
+
+    if split == "train":
+        return X_train, y_train
+    if split == "test":
+        return X_test, y_test
+    if split == "all":
+        return X_train, X_test, y_train, y_test
+
+    raise ValueError("split must be one of 'train', 'test', or 'all'")
