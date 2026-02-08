@@ -4,138 +4,305 @@
   box-sizing: border-box;
 }
 
+/* =========================
+   ROOT VARIABLES
+========================= */
 :root {
-  --primary-blue: #2563eb;
-  --secondary-blue: #3b82f6;
-  --light-blue: #60a5fa;
-  --very-light-blue: #dbeafe;
-  --dark-blue: #1e40af;
-  --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --card-bg: #ffffff;
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --border-color: #e2e8f0;
+  /* Dark futuristic theme - Deep Purple/Navy */
+  --bg-dark: #0a0e27;
+  --bg-darker: #05060f;
+  --primary-neon: #00d9ff;
+  --secondary-neon: #6b5cff;
+  --accent-purple: #7c3aed;
+  --accent-indigo: #4f46e5;
+
+  /* Backgrounds */
+  --bg-main: #0a0e27;
+  --bg-secondary: #05060f;
+  --sidebar-bg: #0f1629;
+  --card-bg: #1a1f3a;
+  --card-hover: #262f4f;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(26, 31, 58, 0.7);
+  --glass-border: rgba(107, 92, 255, 0.2);
+
+  /* Text */
+  --text-primary: #f0f4ff;
+  --text-secondary: #a0aec0;
+  --text-tertiary: #718096;
+
+  /* Borders & shadows */
+  --border-color: #2d3748;
+  --border-neon: #00d9ff;
+  --shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 40px 80px rgba(0, 0, 0, 0.95);
+  --glow-cyan: 0 0 30px rgba(0, 217, 255, 0.3);
+  --glow-purple: 0 0 30px rgba(123, 60, 237, 0.2);
+
+  /* Status */
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #6b5cff 0%, #7c3aed 100%);
+  --gradient-dark: linear-gradient(135deg, #0a0e27 0%, #05060f 100%);
+  --gradient-card: linear-gradient(135deg, rgba(107, 92, 255, 0.1) 0%, rgba(123, 60, 237, 0.05) 100%);
 }
 
+/* =========================
+   GLOBAL
+========================= */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', sans-serif;
+
+  background: var(--bg-main);
   color: var(--text-primary);
+  min-height: 100vh;
 }
 
 #root {
   min-height: 100vh;
+  background: var(--bg-main);
 }
 
-/* Scrollbar Styling */
+/* =========================
+   SCROLLBAR
+========================= */
 ::-webkit-scrollbar {
   width: 8px;
-  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--very-light-blue);
+  background: var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--secondary-blue);
+  background: var(--primary-blue);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-blue);
+  background: var(--secondary-blue);
 }
 
-/* Utility Classes */
-.gradient-text {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* =========================
+   SIDEBAR
+========================= */
+.sidebar {
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
 }
 
-.card {
-  background: var(--card-bg);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
+.sidebar h1,
+.sidebar h2,
+.sidebar .logo {
+  color: var(--text-primary);
+}
+
+.sidebar p {
+  color: var(--text-secondary);
+}
+
+/* Sidebar menu items */
+.sidebar a,
+.sidebar .menu-item {
+  color: var(--text-secondary);
+  padding: 0.8rem 1rem;
+  margin: 0.25rem 0.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.sidebar a:hover,
+.sidebar .menu-item:hover {
+  background: rgba(0, 217, 255, 0.1);
+  color: var(--primary-neon);
+}
+
+/* Active */
+.sidebar a.active,
+.sidebar .menu-item.active {
+  background: rgba(107, 92, 255, 0.2);
+  color: var(--primary-neon);
+  font-weight: 600;
+  border-left: 3px solid var(--primary-neon);
+}
+
+/* =========================
+   MAIN CONTENT AREA
+========================= */
+.main,
+.content,
+.dashboard,
+.page-container {
+  background: var(--bg-main);
+}
+
+/* Page headings */
+h1, h2, h3 {
+  color: #f1f5f9;
+}
+
+p {
+  color: var(--text-secondary);
+}
+
+/* =========================
+   CARDS / CONTAINERS
+========================= */
+.card,
+.container,
+.panel {
+  background: var(--glass-bg);
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
   padding: 1.5rem;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-card);
+  pointer-events: none;
+  z-index: -1;
 }
 
 .card:hover {
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg), var(--glow-purple);
+  border-color: rgba(107, 92, 255, 0.4);
 }
 
+/* Camera preview / inner black area */
+video,
+.camera,
+.preview {
+  background: #000;
+  border-radius: 12px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
-  color: white;
+  background: var(--gradient-primary);
+  color: #fff;
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow);
+  box-shadow: 0 0 20px rgba(107, 92, 255, 0.4);
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 0 30px rgba(107, 92, 255, 0.6), var(--glow-purple);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .btn-secondary {
-  background: white;
-  color: var(--primary-blue);
+  background: transparent;
+  color: var(--primary-neon);
+  border: 2px solid var(--primary-neon);
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  border: 2px solid var(--primary-blue);
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
 }
 
 .btn-secondary:hover {
-  background: var(--very-light-blue);
+  background: rgba(0, 217, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
 }
 
-/* Status Badge Colors */
+/* =========================
+   STATUS BADGES
+========================= */
 .status-normal {
-  background: rgba(16, 185, 129, 0.1);
+  background: rgba(16, 185, 129, 0.15);
   color: var(--success);
   border: 1px solid var(--success);
 }
 
 .status-warning {
-  background: rgba(245, 158, 11, 0.1);
+  background: rgba(245, 158, 11, 0.15);
   color: var(--warning);
   border: 1px solid var(--warning);
 }
 
 .status-critical {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.15);
   color: var(--danger);
   border: 1px solid var(--danger);
 }
 
-/* Loading Animation */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
+/* =========================
+   KEYFRAME ANIMATIONS
+========================= */
+
+
+
+@keyframes rotate-dashed {
+  from {
+    transform: rotate(0deg);
   }
-  50% {
-    opacity: 0.5;
+  to {
+    transform: rotate(360deg);
   }
 }
+
+.face-scan-ring {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  pointer-events: none;
+
+  background: conic-gradient(
+    rgba(0, 217, 255, 0.9) 0deg 8deg,
+    transparent 8deg 16deg
+  );
+
+  mask: radial-gradient(
+    transparent 63%,
+    black 65%
+  );
+
+  animation: rotate-dashed 10s linear infinite;
+}
+
+
 
 .loading {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
