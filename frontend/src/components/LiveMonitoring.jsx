@@ -125,14 +125,14 @@ const LiveMonitoring = () => {
       </div>
 
       {/* Main Layout: Face Scan + Metrics in One Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
-        {/* Left: Circular Facial Scan - No outer box */}
-        <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '400px' }}>
-          {/* Square Container with Curved Edges */}
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
+        {/* Left: Rectangular Facial Scan - No outer box */}
+        <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '500px' }}>
+          {/* Rectangular Container with Curved Edges */}
           <div style={{
   position: 'relative',
-  width: '320px',
-  height: '320px',
+  width: '100%',
+  height: '480px',
   borderRadius: '16px',
   overflow: 'hidden',
   border: `2px solid ${colors.accent}`,
@@ -171,7 +171,7 @@ const LiveMonitoring = () => {
           <button
             onClick={isStreaming ? stopCamera : startCamera}
             className={isStreaming ? 'btn-secondary' : 'btn-primary'}
-            style={{ marginTop: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.5rem', fontSize: '0.9rem' }}
+            style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.5rem', fontSize: '0.9rem' }}
           >
             {isStreaming ? <CameraOff size={18} /> : <Camera size={18} />}
             {isStreaming ? 'Stop Camera' : 'Start Camera'}
@@ -187,7 +187,7 @@ const LiveMonitoring = () => {
               color: '#ef4444',
               fontSize: '0.85rem',
               textAlign: 'center',
-              maxWidth: '320px'
+              maxWidth: '100%'
             }}>
               {error}
             </div>

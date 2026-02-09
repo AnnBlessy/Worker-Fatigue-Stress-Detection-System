@@ -224,27 +224,106 @@ const Analytics = () => {
         </div>
       </div>
 
-      {/* SESSION BREAKDOWN */}
-      <div style={{
-        background: colors.cardBackground,
-        border: `1px solid ${colors.border}`,
-        borderRadius: '12px',
-        padding: '1.5rem'
-      }}>
-        <h3 style={{ marginBottom: '1.5rem', color: colors.textPrimary }}>
-          Session Breakdown ({timeUnit})
-        </h3>
+      {/* SESSION BREAKDOWN + EMOTION CONTRIBUTION */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+        
+        {/* SESSION BREAKDOWN */}
+        <div style={{
+          background: colors.cardBackground,
+          border: `1px solid ${colors.border}`,
+          borderRadius: '12px',
+          padding: '1.5rem'
+        }}>
+          <h3 style={{ marginBottom: '1.5rem', color: colors.textPrimary }}>
+            Session Breakdown ({timeUnit})
+          </h3>
 
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={timeBreakdownData}>
-            <XAxis dataKey="time" />
-            <YAxis domain={[0, 100]} />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="fatigue" fill="#6b5cff" />
-            <Bar dataKey="stress" fill="#ed3ae1" />
-          </BarChart>
-        </ResponsiveContainer>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={timeBreakdownData}>
+              <XAxis dataKey="time" />
+              <YAxis domain={[0, 100]} />
+              <Tooltip />
+              <Legend wrapperStyle={{ fontSize: '0.85rem' }} />
+              <Bar dataKey="fatigue" fill="#6b5cff" />
+              <Bar dataKey="stress" fill="#ed3ae1" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* EMOTION CONTRIBUTION */}
+        <div style={{
+          background: colors.cardBackground,
+          border: `1px solid ${colors.border}`,
+          borderRadius: '12px',
+          padding: '1.5rem'
+        }}>
+          <h3 style={{ marginBottom: '1.5rem', color: colors.textPrimary }}>
+            Emotion Contribution
+          </h3>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', height: '200px' }}>
+            {/* STRESS EMOTIONS */}
+            <div style={{
+              background: isDark ? 'rgba(237,58,161,0.1)' : 'rgba(237,58,161,0.08)',
+              border: `1px solid #ed3ae1`,
+              borderRadius: '8px',
+              padding: '1rem',
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              <h4 style={{ color: '#ed3ae1', marginBottom: '1rem', fontSize: '0.9rem', fontWeight: '600' }}>
+                Stress Emotions ({stats.avg_stress.toFixed(1)}%)
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, justifyContent: 'center' }}>
+                {[
+                  { emoji: '😠', label: 'Angry', percent: stats.avg_stress * 0.35 },
+                  { emoji: '😒', label: 'Disgust', percent: stats.avg_stress * 0.35 },
+                  { emoji: '😨', label: 'Fear', percent: stats.avg_stress * 0.30 }
+                ].map((emotion, idx) => (
+                  <div key={idx}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem', fontSize: '0.75rem' }}>
+                      <span style={{ color: colors.textSecondary }}>{emotion.emoji} {emotion.label}</span>
+                      <span style={{ color: '#ed3ae1', fontWeight: '600' }}>{emotion.percent.toFixed(1)}%</span>
+                    </div>
+                    <div style={{ background: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.1)', borderRadius: '4px', height: '6px', overflow: 'hidden' }}>
+                      <div style={{ background: '#d4a574', height: '100%', width: `${(emotion.percent / stats.avg_stress) * 100}%`, borderRadius: '4px', transition: 'width 0.3s ease' }}></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* FATIGUE EMOTIONS */}
+            <div style={{
+              background: isDark ? 'rgba(107,92,255,0.1)' : 'rgba(107,92,255,0.08)',
+              border: `1px solid #6b5cff`,
+              borderRadius: '8px',
+              padding: '1rem',
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              <h4 style={{ color: '#6b5cff', marginBottom: '1rem', fontSize: '0.9rem', fontWeight: '600' }}>
+                Fatigue Emotions ({stats.avg_fatigue.toFixed(1)}%)
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, justifyContent: 'center' }}>
+                {[
+                  { emoji: '😢', label: 'Sad', percent: stats.avg_fatigue * 0.60 },
+                  { emoji: '😐', label: 'Neutral', percent: stats.avg_fatigue * 0.40 }
+                ].map((emotion, idx) => (
+                  <div key={idx}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem', fontSize: '0.75rem' }}>
+                      <span style={{ color: colors.textSecondary }}>{emotion.emoji} {emotion.label}</span>
+                      <span style={{ color: '#6b5cff', fontWeight: '600' }}>{emotion.percent.toFixed(1)}%</span>
+                    </div>
+                    <div style={{ background: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.1)', borderRadius: '4px', height: '6px', overflow: 'hidden' }}>
+                      <div style={{ background: '#8b7dd8', height: '100%', width: `${(emotion.percent / stats.avg_fatigue) * 100}%`, borderRadius: '4px', transition: 'width 0.3s ease' }}></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* OPERATIONAL STRAIN SUMMARY */}
