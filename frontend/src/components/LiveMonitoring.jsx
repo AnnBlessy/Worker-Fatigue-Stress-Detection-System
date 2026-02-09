@@ -202,7 +202,7 @@ const LiveMonitoring = () => {
             border: `1px solid ${colors.border}`,
             borderRadius: '12px',
             padding: '1rem',
-            height: '120px',
+            height: '130px',
             overflow: 'hidden'
           }}>
             <p style={{ fontSize: '0.75rem', color: colors.textSecondary, marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -396,7 +396,7 @@ const LiveMonitoring = () => {
                 stroke="#ef4444" 
                 strokeWidth={2.5}
                 dot={false}
-                name="Risk Score"
+                name="Strain Score"
               />
             </LineChart>
           </ResponsiveContainer>
