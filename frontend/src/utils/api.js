@@ -36,6 +36,15 @@ export const api = {
     const response = await axios.post(`${API_BASE_URL}/session/reset`);
     return response.data;
   },
+
+  // Get AI-generated recommendations (Gemini LLM via backend)
+  getRecommendations: async (statistics, session_info = {}) => {
+    const response = await axios.post(`${API_BASE_URL}/analytics/recommendations`, {
+      statistics,
+      session_info
+    });
+    return response.data;
+  },
   
   // Health check
   healthCheck: async () => {
