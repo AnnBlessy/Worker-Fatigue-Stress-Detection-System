@@ -42,7 +42,14 @@ app.add_middleware(
 )
 
 # Initialize models
-emotion_detector = EmotionDetector()
+# emotion_detector = EmotionDetector()
+emotion_detector = None
+
+@app.on_event("startup")
+def load_model():
+    global emotion_detector
+    emotion_detector = EmotionDetector()
+    
 risk_engine = RiskEngine()
 temporal_smoother = TemporalSmoother()
 
