@@ -24,7 +24,6 @@ services:
     name: worker-fatigue-frontend
     env: static
     plan: free
-    region: oregon
     branch: main
 
     buildCommand: |
