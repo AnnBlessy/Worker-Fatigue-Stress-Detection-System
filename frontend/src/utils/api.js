@@ -2,58 +2,51 @@ import axios from "axios";
 
 const API = import.meta.env.VITE_API_URL;
 
-// Create axios instance
-const api = axios.create({
+const axiosInstance = axios.create({
   baseURL: API,
 });
 
-// Analyze a single frame
-export const analyzeFrame = async (imageBlob) => {
-  const formData = new FormData();
-  formData.append("file", imageBlob, "frame.jpg");
+const api = {
+  analyzeFrame: async (imageBlob) => {
+    const formData = new FormData();
+    formData.append("file", imageBlob, "frame.jpg");
 
-  const response = await api.post("/analyze-frame", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+    const response = await axiosInstance.post("/analyze-frame", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
 
-  return response.data;
-};
+    return response.data;
+  },
 
-// Get analytics summary
-export const getAnalyticsSummary = async () => {
-  const response = await api.get("/analytics/summary");
-  return response.data;
-};
+  getAnalyticsSummary: async () => {
+    const response = await axiosInstance.get("/analytics/summary");
+    return response.data;
+  },
 
-// Get prediction history
-export const getPredictionHistory = async (limit = 100) => {
-  const response = await api.get("/analytics/history", {
-    params: { limit },
-  });
-  return response.data;
-};
+  getPredictionHistory: async (limit = 100) => {
+    const response = await axiosInstance.get("/analytics/history", {
+      params: { limit },
+    });
+    return response.data;
+  },
 
-// Reset session
-export const resetSession = async () => {
-  const response = await api.post("/session/reset");
-  return response.data;
-};
+  resetSession: async () => {
+    const response = await axiosInstance.post("/session/reset");
+    return response.data;
+  },
 
-// Get AI recommendations
-export const getRecommendations = async (statistics, session_info = {}) => {
-  const response = await api.post("/analytics/recommendations", {
-    statistics,
-    session_info,
-  });
-  return response.data;
-};
+  getRecommendations: async (statistics, session_info = {}) => {
+    const response = await axiosInstance.post("/analytics/recommendations", {
+      statistics,
+      session_info,
+    });
+    return response.data;
+  },
 
-// Health check
-export const healthCheck = async () => {
-  const response = await api.get("/health");
-  return response.data;
+  healthCheck: async () => {
+    const response = await axiosInstance.get("/health");
+    return response.data;
+  },
 };
 
 export default api;
