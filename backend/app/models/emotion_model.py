@@ -6,6 +6,8 @@ from typing import Dict, Optional, Tuple
 import sys
 from pathlib import Path
 
+tf.config.set_visible_devices([], 'GPU')
+
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
