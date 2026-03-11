@@ -15,11 +15,6 @@ services:
 
     healthCheckPath: /
 
-    # envVars:
-    #   - key: PYTHON_VERSION
-    #     value: 3.10.13
-
-
   # ================= FRONTEND =================
   - type: web
     name: worker-fatigue-frontend
