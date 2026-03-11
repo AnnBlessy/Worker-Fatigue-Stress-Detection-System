@@ -2,7 +2,7 @@ services:
   # Backend API Service
   - type: web
     name: worker-fatigue-backend
-    runtime: python
+    env: python
     plan: free
     region: oregon
     branch: main
@@ -20,8 +20,9 @@ services:
         value: 3.10
 
   # Frontend Static Site
-  - type: static
+  - type: web
     name: worker-fatigue-frontend
+    env: static
     plan: free
     region: oregon
     branch: main
