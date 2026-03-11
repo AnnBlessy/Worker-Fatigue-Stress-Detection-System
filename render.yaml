@@ -1,5 +1,5 @@
 services:
-  # Backend API Service
+  # ================= BACKEND =================
   - type: web
     name: worker-fatigue-backend
     env: python
@@ -11,7 +11,7 @@ services:
       pip install --upgrade pip
       pip install -r requirements.txt
 
-    startCommand: python app/main.py
+    startCommand: gunicorn app.main:app -k uvicorn.workers.UvicornWorker
 
     healthCheckPath: /
 
@@ -19,11 +19,11 @@ services:
       - key: PYTHON_VERSION
         value: 3.10
 
-  # Frontend Static Site
+
+  # ================= FRONTEND =================
   - type: web
     name: worker-fatigue-frontend
     env: static
-    plan: free
     branch: main
 
     buildCommand: |
@@ -37,3 +37,10 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
+
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: worker-fatigue-backend
+          type: web
+          property: host
