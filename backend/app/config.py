@@ -28,7 +28,8 @@ class Config:
     # API settings
     CORS_ORIGINS = [
         "http://localhost:5173",
-        "http://localhost:3000"
+        "http://localhost:3000",
+        "https://worker-fatigue-frontend.onrender.com"
     ]
 
 config = Config()
