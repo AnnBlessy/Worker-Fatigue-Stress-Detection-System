@@ -2,37 +2,37 @@ services:
   # Backend API Service
   - type: web
     name: worker-fatigue-backend
-    env: python
-    region: oregon
+    runtime: python
     plan: free
+    region: oregon
     branch: main
+
     buildCommand: |
       pip install --upgrade pip
       pip install -r requirements.txt
+
     startCommand: python app/main.py
+
     healthCheckPath: /
+
     envVars:
       - key: PYTHON_VERSION
-        value: 3.10.0
-      - key: PORT
-        value: 8000
-    disk:
-      name: model-storage
-      mountPath: /opt/render/project/src/saved_models
-      sizeGB: 1
+        value: 3.10
 
   # Frontend Static Site
-  - type: web
+  - type: static
     name: worker-fatigue-frontend
-    env: static
-    region: oregon
     plan: free
+    region: oregon
     branch: main
+
     buildCommand: |
       cd frontend
       npm install
       npm run build
+
     staticPublishPath: frontend/dist
+
     routes:
       - type: rewrite
         source: /*
