@@ -227,32 +227,59 @@ async def generate_recommendations(payload: dict = Body(...)):
         session_info = payload.get('session_info') or {}
 
         # Build a clear, structured prompt that asks for pointwise recommendations
+        
         prompt = f"""
-You are an expert occupational health assistant. Use the term "strain score" instead of "risk".
-Given the following session statistics, produce clear, concise, pointwise recommendations to overcome workforce 
-stress or fatigue levels for supervisors and workers. Return only bullet points, keep each item short (<= 250 characters),
-and group them by immediate actions, short-term measures (within the shift), and longer-term suggestions.
-
-Session statistics (values are numeric):
-Average Fatigue (%): {stats.get('avg_fatigue', 'N/A')}
-Average Stress (%): {stats.get('avg_stress', 'N/A')}
-Average Operational Strain Score: {stats.get('avg_risk', 'N/A')}
-Minimum Strain: {stats.get('min_risk', 'N/A')}
-Maximum Strain: {stats.get('max_risk', 'N/A')}
-Total Samples: {stats.get('total_samples', 'N/A')}
-
-Instructions for the model:
-- Use the phrase "strain score" consistently.
-- Provide recommendations tailored to the numeric values above.
-- If average strain score >= 71, lead with a short critical-action checklist.
-- If average strain score between 41 and 70, provide monitoring and mitigation steps.
-- If average strain score <= 40, confirm normal conditions and suggest routine checks.
-- If average fatigue > 60 or average stress > 60, add a focused recommendation about rest or workload.
-- Format: Plain text with one bullet point per line, do NOT output any additional commentary or headings.
-
-Generate recommendations that fit the provided stats, even if its more than 2 points per category. The more specific to the stats, the better.
-This is for manufacturing workers in a factory setting, so keep recommendations practical and actionable for that environment.
-"""
+        You are an expert occupational health and safety advisor. Always use the term 
+        "strain score" instead of "risk".
+        
+        Your task is to generate clear, concise, and actionable recommendations to help 
+        manufacturing supervisors and workers manage and reduce fatigue or stress during 
+        a shift.
+        
+        Use the session statistics below to tailor your recommendations:
+        
+        Session Statistics:
+        - Average Fatigue (%): {stats.get('avg_fatigue', 'N/A')}
+        - Average Stress (%): {stats.get('avg_stress', 'N/A')}
+        - Average Operational Strain Score: {stats.get('avg_risk', 'N/A')}
+        - Minimum Strain Score: {stats.get('min_risk', 'N/A')}
+        - Maximum Strain Score: {stats.get('max_risk', 'N/A')}
+        - Total Samples: {stats.get('total_samples', 'N/A')}
+        
+        Guidelines:
+        1. Always say "strain score"—never "risk".
+        2. Base your advice on the numeric values above.
+        3. Provide recommendations grouped into the following categories:
+           - Immediate Actions (to apply right now)
+           - Short-Term Measures (within the same shift)
+           - Longer-Term Improvements (over days or weeks)
+        4. For each category, provide **2 to 3 highly relevant bullet points**.
+        5. If the average strain score is:
+           - ≥ 71: include a brief, urgent checklist as the first category.
+           - 41–70: focus on monitoring, pacing, and workload balancing.
+           - ≤ 40: confirm normal conditions and include routine preventive steps.
+        6. If average fatigue > 60 or average stress > 60, include at least one 
+           additional targeted recommendation about rest, micro-breaks, or workload adjustment.
+        7. Use plain text only. No headings other than the category labels.
+        8. Each bullet point must be:
+           - Short (≤ 250 characters),
+           - Action-oriented,
+           - Written in clear, professional English,
+           - Directly relevant to the strain score values.
+        
+        Return the output in the following structure only:
+        
+        Immediate Actions:
+        • <2–3 bullet points>
+        
+        Short-Term Measures:
+        • <2–3 bullet points>
+        
+        Longer-Term Improvements:
+        • <2–3 bullet points>
+        
+        Do not add any additional commentary outside this structure.
+        """
 
         # Call the Gemini API via generativelanguage.googleapis.com
         api_key = os.getenv('GEMINI_API_KEY')
