@@ -33,9 +33,7 @@ services:
         source: /*
         destination: /index.html
 
-    envVars:
+    
+  envVars:
       - key: VITE_API_URL
-        fromService:
-          name: worker-fatigue-backend
-          type: web
-          property: host
+        value: https://worker-fatigue-backend.onrender.com/api
